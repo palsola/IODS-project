@@ -9,5 +9,4 @@
 date()
 
 ```
-The text continues here.
-
+I have very minimal experience with R but I am determined to learn at least the basics in order to conduct more versatile statistical analyses.

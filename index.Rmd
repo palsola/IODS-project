@@ -1,5 +1,6 @@
 ---
 title: "IODS course project"
+author: "Minttu Palsola"
 output:
   html_document:
     theme: cosmo

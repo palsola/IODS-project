@@ -1,0 +1,156 @@
+# 3. Logistic regression analysis
+
+The purpose of this analysis is to study the relationships between high/low alcohol consumption and some of the other variables in the data. 
+
+The preceding data wrangling exercise is available <a href="https://github.com/palsola/IODS-project/blob/master/data/create_%20alc.R"> here<a/>.
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+date()
+
+```
+
+## Hypotheses 
+
+For this exercise, I chose 4 variables in the data that could have a relationship with alcohol consumption: quality of family relationships, number of school absences, current health status and sex. Hypotheses for each are as follows: 
+
+1. Quality of family relationships are negatively associated with alcohol consumption, i.e., the better the relationship, the less likely is high alcohol consumption.
+2. Number of school absences are positively associated with alcohol consumption, i.e., the more absences, the more likely is high alcohol consumption.
+3. Current health status is negatively associated with alcohol consumption, i.e., the better the health, the less likely is high alcohol consumption.
+4. I am adding sex to the model mostly to control for its effects, but I also assume that male sex is positively associated with high alcohol consumption.
+
+## Exploration of data
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+students <- read.csv("C:/Users/minttu/R projects/IODS-project/data/students.csv")
+
+# access the dplyr library
+library(dplyr)
+colnames(students)
+
+keep_columns <- c("sex","famrel","health", "absences", "high_use")
+alc <- select(students, one_of(keep_columns))
+
+```
+
+
+The whole dataset used for this exercise has `r nrow(students)` observations of `r ncol(students)` variables. For this exercise I will be using a subset with `r nrow(alc)` observations of `r ncol(alc)` variables.
+
+Beloe is a summary table of all the variables as well as their bar plots. All variables except for sex seem to be skewed
+
+```{r echo=TRUE}
+
+summary(alc)
+
+par(mfrow=c(2,2))
+# barplot of famrel
+barplot(table(alc$famrel),
+main="Quality of family relationships",
+xlab="Family relationaship grade",
+ylab="Count"
+)
+
+# barplot of absences
+barplot(table(alc$absences),
+main="Number of absences",
+xlab="Number of absences",
+ylab="Count"
+)
+
+# barplot of health
+barplot(table(alc$health),
+main="Quality of health",
+xlab="Health grade",
+ylab="Count"
+)
+
+# barplot of sex
+barplot(table(alc$sex),
+main="Sex",
+xlab="Sex, F=female, M=male",
+ylab="Count"
+)
+
+
+```
+
+I used boxplots to explore the relationships between alcohol consumption family relations, health, and absences. I drew plots separately for females and males. In addition, I investigated the relationship between sex and alcohol consumption with cross tabulation.
+
+Based on these, it seems that:
+
+1. Quality of family relationships might be slightly negatively associated with alcohol consumption as hypothesized
+2. Number of school absences might be positively associated with alcohol consumption as hypothesized.
+3. Current health status is not associated with alcohol consumption contrary to initial hypothesis.
+4. Male sex is positively associated with high alcohol consumption as hypothesized.
+
+```{r echo=TRUE}
+
+# access libraries
+library(ggplot2)
+
+
+# a plot of high_use and family relations by sex
+g1 <- ggplot(alc, aes(x = high_use, y = famrel, colour= sex))
+g1 + geom_boxplot() + ylab("grade") + ggtitle("Family relationships by alcohol consumption and sex")
+
+# a plot of high_use and absences by sex
+g2 <- ggplot(alc, aes(x = high_use, y = absences, colour= sex))
+g2 + geom_boxplot() + ylab("grade") + ggtitle("Student absences by alcohol consumption and sex")
+
+# a plot of high_use and health by sex
+g3 <- ggplot(alc, aes(x = high_use, y = health, colour= sex))
+g3 + geom_boxplot() + ylab("grade") + ggtitle("Health by alcohol consumption and sex")
+
+# a cross-tabulation of high_use and sex
+table1 <- xtabs(~sex+high_use, data=alc)
+ftable(table1)
+summary(table1)
+
+
+```
+
+
+## Logistic regression
+Use logistic regression to statistically explore the relationship between your chosen variables and the binary high/low alcohol consumption variable as the target variable. Present and interpret a summary of the fitted model. Present and interpret the coefficients of the model as odds ratios and provide confidence intervals for them. Interpret the results and compare them to your previously stated hypothesis. Hint: If your model includes factor variables see for example the first answer of this stackexchange thread on how R treats and how you should interpret these variables in the model output (or use some other resource to study this). (0-5 points)
+
+```{r}
+
+# find the model with glm()
+m <- glm(high_use ~ famrel + absences + health + sex, data = alc, family = "binomial")
+
+# compute odds ratios (OR)
+OR <- coef(m) %>% exp
+
+# compute confidence intervals (CI)
+CI <- confint(m) %>% exp
+
+# print out the odds ratios with their confidence intervals
+cbind(OR, CI)
+
+
+```
+
+
+Using the variables which, according to your logistic regression model, had a statistical relationship with high/low alcohol consumption, explore the predictive power of you model. Provide a 2x2 cross tabulation of predictions versus the actual values and optionally display a graphic visualizing both the actual values and the predictions. Compute the total proportion of inaccurately classified individuals (= the training error) and comment on all the results. Compare the performance of the model with performance achieved by some simple guessing strategy. (0-3 points)
+
+```{r}
+
+```
+
+
+
+## Cross validation
+Bonus: Perform 10-fold cross-validation on your model. Does your model have better test set performance (smaller prediction error using 10-fold cross-validation) compared to the model introduced in DataCamp (which had about 0.26 error). Could you find such a model? (0-2 points to compensate any loss of points from the above exercises)
+
+```{r}
+
+```
+
+
+Super-Bonus: Perform cross-validation to compare the performance of different logistic regression models (= different sets of predictors). Start with a very high number of predictors and explore the changes in the training and testing errors as you move to models with less predictors. Draw a graph displaying the trends of both training and testing errors by the number of predictors in the model. (0-4 points to compensate any loss of points from the above exercises)
+
+```{r}
+
+```
+

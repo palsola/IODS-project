@@ -26,6 +26,11 @@ output:
 ```
 
 ***
+  
+```{r child = "chapter3.Rmd"}
+```
+
+***
 
 (more chapters to be added similarly as we proceed with the course!)
 

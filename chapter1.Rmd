@@ -1,7 +1,7 @@
 
-# About the project
+# 1. About the project
 
-*This is my project for the Introduction to Open Data Science 2020 course at HU. Link to my GitHub repository: https://github.com/palsola/IODS-project*
+*This is my project for the Introduction to Open Data Science 2020 course at HU. Here is a link to my GitHub repository: <a href="https://github.com/palsola/IODS-project"> clickity click!<a/>*
 
 ```{r}
 # This is a so-called "R chunk" where you can write R code.

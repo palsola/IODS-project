@@ -140,15 +140,58 @@ According to the regression model:
 Hence, support was gained for hypotheses 1,2 and 4, but not 3. Furthermore, the odds ratios show that having good family relationships is more likely to lead to low use rather than high use: the people of higher grades of family relations have 0.74 times the odds to have high alcohol use compared to lower grades. Conversely, the people with more absences have 1.09 times the odds to have high use of alcohol than people with less absences. The males have 2.73 the odds to have high alcohol use compared to females
 
 
-Using the variables which, according to your logistic regression model, had a statistical relationship with high/low alcohol consumption, explore the predictive power of you model. Provide a 2x2 cross tabulation of predictions versus the actual values and optionally display a graphic visualizing both the actual values and the predictions. Compute the total proportion of inaccurately classified individuals (= the training error) and comment on all the results. Compare the performance of the model with performance achieved by some simple guessing strategy. (0-3 points)
+Next, I will only use the variables that had a statistical relationship with high/low alcohol consumption, and explore the predictive power of this model. 
 
 ```{r}
+
+# model with sig IVs
+m1 <- glm(high_use ~ famrel + absences + sex, data = alc, family = "binomial")
+
+# predict() the probability of high_use
+probabilities <- predict(m1, type = "response")
+
+# add the predicted probabilities to 'alc'
+alc <- mutate(alc, probability = probabilities)
+
+# use the probabilities to make a prediction of high_use
+alc <- mutate(alc, prediction = probability > 0.5)
+
+# target variable versus the predictions
+table(high_use = alc$high_use, prediction = alc$prediction)
+table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table %>% addmargins
+
+# a plot of 'high_use' versus 'probability' in 'alc'
+g <- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+g + geom_point()
+
+# define a loss function (average prediction error)
+loss_func <- function(class, prob) {
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
+
+# call loss_func to compute the average number of wrong predictions in the (training) data
+loss <- loss_func(class = alc$high_use, prob = alc$probability)
+```
+
+According to the 2x2 cross tabulation of predictions versus the actual values, it seems like the model is not perfect in predicting alcohol use. Based on the cross tabulation, it is better in predicting true low use  rather than true high use. The same is true when examining probabilities in cross tabulation and plot.
+
+The average number of wrong predictions in the data is `r loss`.
+
+
+Compare the performance of the model with performance achieved by some simple guessing strategy. (0-3 points)
+
+```{r}
+
+
 
 ```
 
 
 
+
 ## Cross validation
+
 Bonus: Perform 10-fold cross-validation on your model. Does your model have better test set performance (smaller prediction error using 10-fold cross-validation) compared to the model introduced in DataCamp (which had about 0.26 error). Could you find such a model? (0-2 points to compensate any loss of points from the above exercises)
 
 ```{r}

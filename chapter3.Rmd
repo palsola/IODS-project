@@ -39,7 +39,7 @@ The whole dataset used for this exercise has `r nrow(students)` observations of 
 
 Beloe is a summary table of all the variables as well as their bar plots. All variables except for sex seem to be skewed
 
-```{r echo=TRUE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 summary(alc)
 
@@ -84,7 +84,7 @@ Based on these, it seems that:
 3. Current health status is not associated with alcohol consumption contrary to initial hypothesis.
 4. Male sex is positively associated with high alcohol consumption as hypothesized.
 
-```{r echo=TRUE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 # access libraries
 library(ggplot2)
@@ -142,7 +142,7 @@ Hence, support was gained for hypotheses 1,2 and 4, but not 3. Furthermore, the 
 
 Next, I will only use the variables that had a statistical relationship with high/low alcohol consumption, and explore the predictive power of this model. 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 # model with sig IVs
 m1 <- glm(high_use ~ famrel + absences + sex, data = alc, family = "binomial")
@@ -172,36 +172,42 @@ loss_func <- function(class, prob) {
 
 # call loss_func to compute the average number of wrong predictions in the (training) data
 loss <- loss_func(class = alc$high_use, prob = alc$probability)
+
+
 ```
 
 According to the 2x2 cross tabulation of predictions versus the actual values, it seems like the model is not perfect in predicting alcohol use. Based on the cross tabulation, it is better in predicting true low use  rather than true high use. The same is true when examining probabilities in cross tabulation and plot.
 
-The average number of wrong predictions in the data is `r loss`.
-
-
-Compare the performance of the model with performance achieved by some simple guessing strategy. (0-3 points)
-
-```{r}
-
-
-
-```
-
-
+The average number of wrong predictions in the data is `r loss`, which is not too bad.
 
 
 ## Cross validation
 
-Bonus: Perform 10-fold cross-validation on your model. Does your model have better test set performance (smaller prediction error using 10-fold cross-validation) compared to the model introduced in DataCamp (which had about 0.26 error). Could you find such a model? (0-2 points to compensate any loss of points from the above exercises)
+```{r message=FALSE, warning=FALSE}
+# define a loss function (average prediction error)
+loss_func <- function(class, prob) {
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
 
-```{r}
+# compute the average number of wrong predictions in the (training) data
+loss_func(class = alc$high_use, prob = alc$probability)
+
+# K-fold cross-validation
+library(boot)
+cv <- cv.glm(data = alc, cost = loss_func, glmfit = m, K = 10)
+
+# average number of wrong predictions in the cross validation
+wrong_pred <- cv$delta[1]
 
 ```
 
+The average number of wrong predictions in the cross validation is `r wrong_pred` which is slightly better than the model introduced in DataCamp (which had about 0.26 error).
 
-Super-Bonus: Perform cross-validation to compare the performance of different logistic regression models (= different sets of predictors). Start with a very high number of predictors and explore the changes in the training and testing errors as you move to models with less predictors. Draw a graph displaying the trends of both training and testing errors by the number of predictors in the model. (0-4 points to compensate any loss of points from the above exercises)
+
 
 ```{r}
+#Super-Bonus: Perform cross-validation to compare the performance of different logistic regression models (= different sets of predictors). Start with a very high number of predictors and explore the changes in the training and testing errors as you move to models with less predictors. Draw a graph displaying the trends of both training and testing errors by the number of predictors in the model. (0-4 points to compensate any loss of points from the above exercises)
 
 ```
 

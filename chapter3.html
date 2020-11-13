@@ -369,7 +369,7 @@ summary {
 <h1>3. Logistic regression analysis</h1>
 <p>The purpose of this analysis is to study the relationships between high/low alcohol consumption and some of the other variables in the data.</p>
 <p>The preceding data wrangling exercise is available <a href="https://github.com/palsola/IODS-project/blob/master/data/create_%20alc.R"> here<a></a>.</p>
-<pre><code>## [1] &quot;Fri Nov 13 09:14:59 2020&quot;</code></pre>
+<pre><code>## [1] &quot;Fri Nov 13 10:02:47 2020&quot;</code></pre>
 <div id="hypotheses" class="section level2">
 <h2>Hypotheses</h2>
 <p>For this exercise, I chose 4 variables in the data that could have a relationship with alcohol consumption: quality of family relationships, number of school absences, current health status and sex. Hypotheses for each are as follows:</p>
@@ -474,7 +474,6 @@ ftable(table1)</code></pre>
 </div>
 <div id="logistic-regression" class="section level2">
 <h2>Logistic regression</h2>
-<p>Use logistic regression to statistically explore the relationship between your chosen variables and the binary high/low alcohol consumption variable as the target variable. Present and interpret a summary of the fitted model. Present and interpret the coefficients of the model as odds ratios and provide confidence intervals for them. Interpret the results and compare them to your previously stated hypothesis. Hint: If your model includes factor variables see for example the first answer of this stackexchange thread on how R treats and how you should interpret these variables in the model output (or use some other resource to study this). (0-5 points)</p>
 <pre class="r"><code># find the model with glm()
 m &lt;- glm(high_use ~ famrel + absences + health + sex, data = alc, family = &quot;binomial&quot;)
 
@@ -482,16 +481,51 @@ m &lt;- glm(high_use ~ famrel + absences + health + sex, data = alc, family = &q
 OR &lt;- coef(m) %&gt;% exp
 
 # compute confidence intervals (CI)
-CI &lt;- confint(m) %&gt;% exp</code></pre>
-<pre><code>## Waiting for profiling to be done...</code></pre>
-<pre class="r"><code># print out the odds ratios with their confidence intervals
-cbind(OR, CI)</code></pre>
+CI &lt;- confint(m) %&gt;% exp
+
+# print out the odds ratios with their confidence intervals
+summary(m)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = high_use ~ famrel + absences + health + sex, family = &quot;binomial&quot;, 
+##     data = alc)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.2557  -0.8609  -0.6151   1.0698   2.1157  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.94806    0.58165  -1.630   0.1031    
+## famrel      -0.30625    0.12864  -2.381   0.0173 *  
+## absences     0.09375    0.02264   4.141 3.45e-05 ***
+## health       0.08331    0.08779   0.949   0.3426    
+## sexM         1.00440    0.24498   4.100 4.13e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 465.68  on 381  degrees of freedom
+## Residual deviance: 423.95  on 377  degrees of freedom
+## AIC: 433.95
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<pre class="r"><code>cbind(OR, CI)</code></pre>
 <pre><code>##                    OR     2.5 %    97.5 %
 ## (Intercept) 0.3874923 0.1218232 1.2018295
 ## famrel      0.7362043 0.5708862 0.9470728
 ## absences    1.0982852 1.0527088 1.1506747
 ## health      1.0868775 0.9165274 1.2940911
 ## sexM        2.7302676 1.6999004 4.4499308</code></pre>
+<p>According to the regression model:</p>
+<ol style="list-style-type: decimal">
+<li>Family relationships are negatively associated with alcohol consumption (negative coefficient, p&lt;.05, CI does not contain 1, and is &lt;1)</li>
+<li>Absences are positively associated with alcohol consumption (positive coefficient, p&lt;0.001, CI does not contain 1, and is &gt;1)</li>
+<li>Health is not associated with alcohol consumption (p&gt;.05, CI contains 1)</li>
+<li>Male sex is positively associated with alcohol consumption (positive coefficient, p&lt;.001, CI does not contain 1, and is &gt;1)</li>
+</ol>
+<p>Hence, support was gained for hypotheses 1,2 and 4, but not 3. Furthermore, the odds ratios show that having good family relationships is more likely to lead to low use rather than high use: the people of higher grades of family relations have 0.74 times the odds to have high alcohol use compared to lower grades. Conversely, the people with more absences have 1.09 times the odds to have high use of alcohol than people with less absences. The males have 2.73 the odds to have high alcohol use compared to females</p>
 <p>Using the variables which, according to your logistic regression model, had a statistical relationship with high/low alcohol consumption, explore the predictive power of you model. Provide a 2x2 cross tabulation of predictions versus the actual values and optionally display a graphic visualizing both the actual values and the predictions. Compute the total proportion of inaccurately classified individuals (= the training error) and comment on all the results. Compare the performance of the model with performance achieved by some simple guessing strategy. (0-3 points)</p>
 </div>
 <div id="cross-validation" class="section level2">

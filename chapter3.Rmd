@@ -37,7 +37,7 @@ alc <- select(students, one_of(keep_columns))
 
 The whole dataset used for this exercise has `r nrow(students)` observations of `r ncol(students)` variables. For this exercise I will be using a subset with `r nrow(alc)` observations of `r ncol(alc)` variables.
 
-Beloe is a summary table of all the variables as well as their bar plots. All variables except for sex seem to be skewed
+Below is a summary table of all the variables as well as their bar plots. All variables except for sex seem to be skewed rather than normally distributed, which might affect the reliability of the logistic regression model.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -91,20 +91,23 @@ library(ggplot2)
 
 # a plot of high_use and family relations by sex
 g1 <- ggplot(alc, aes(x = high_use, y = famrel, colour= sex))
-g1 + geom_boxplot() + ylab("grade") + ggtitle("Family relationships by alcohol consumption and sex")
+g1_1 <- g1 + geom_boxplot() + ylab("grade") + ggtitle("Family relationships by alcohol \n consumption and sex")
 
 # a plot of high_use and absences by sex
 g2 <- ggplot(alc, aes(x = high_use, y = absences, colour= sex))
-g2 + geom_boxplot() + ylab("grade") + ggtitle("Student absences by alcohol consumption and sex")
+g2_1 <- g2 + geom_boxplot() + ylab("grade") + ggtitle("Student absences by alcohol \n consumption and sex")
 
 # a plot of high_use and health by sex
 g3 <- ggplot(alc, aes(x = high_use, y = health, colour= sex))
-g3 + geom_boxplot() + ylab("grade") + ggtitle("Health by alcohol consumption and sex")
+g3_1 <- g3 + geom_boxplot() + ylab("grade") + ggtitle("Health by alcohol consumption \n and sex")
 
 # a cross-tabulation of high_use and sex
 table1 <- xtabs(~sex+high_use, data=alc)
 ftable(table1)
 summary(table1)
+
+library(gridExtra)
+grid.arrange(g1_1, g2_1, g3_1, ncol=2)
 
 
 ```
@@ -184,14 +187,6 @@ The average number of wrong predictions in the data is `r loss`, which is not to
 ## Cross validation
 
 ```{r message=FALSE, warning=FALSE}
-# define a loss function (average prediction error)
-loss_func <- function(class, prob) {
-  n_wrong <- abs(class - prob) > 0.5
-  mean(n_wrong)
-}
-
-# compute the average number of wrong predictions in the (training) data
-loss_func(class = alc$high_use, prob = alc$probability)
 
 # K-fold cross-validation
 library(boot)
@@ -204,10 +199,12 @@ wrong_pred <- cv$delta[1]
 
 The average number of wrong predictions in the cross validation is `r wrong_pred` which is slightly better than the model introduced in DataCamp (which had about 0.26 error).
 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 
-```{r}
 #Super-Bonus: Perform cross-validation to compare the performance of different logistic regression models (= different sets of predictors). Start with a very high number of predictors and explore the changes in the training and testing errors as you move to models with less predictors. Draw a graph displaying the trends of both training and testing errors by the number of predictors in the model. (0-4 points to compensate any loss of points from the above exercises)
+
+
 
 ```
 

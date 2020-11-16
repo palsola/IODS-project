@@ -90,25 +90,21 @@ Based on these, it seems that:
 library(ggplot2)
 
 # a plot of high_use and family relations by sex
-g1 <- ggplot(alc, aes(x = high_use, y = famrel, colour= sex))
-g1_1 <- g1 + geom_boxplot() + ylab("grade") + ggtitle("Family relationships by alcohol \n consumption and sex")
+g1 <- ggplot(alc, aes(x = high_use, y = famrel, colour= sex)) + geom_boxplot() + ylab("grade") + ggtitle("Family relationships by alcohol \n consumption and sex")
 
 # a plot of high_use and absences by sex
-g2 <- ggplot(alc, aes(x = high_use, y = absences, colour= sex))
-g2_1 <- g2 + geom_boxplot() + ylab("grade") + ggtitle("Student absences by alcohol \n consumption and sex")
+g2 <- ggplot(alc, aes(x = high_use, y = absences, colour= sex)) + geom_boxplot() + ylab("grade") + ggtitle("Student absences by alcohol \n consumption and sex")
 
 # a plot of high_use and health by sex
-g3 <- ggplot(alc, aes(x = high_use, y = health, colour= sex))
-g3_1 <- g3 + geom_boxplot() + ylab("grade") + ggtitle("Health by alcohol consumption \n and sex")
+g3 <- ggplot(alc, aes(x = high_use, y = health, colour= sex)) + geom_boxplot() + ylab("grade") + ggtitle("Health by alcohol consumption \n and sex")
+
+library(gridExtra)
+grid.arrange(g1, g2, g3, ncol=2)
 
 # a cross-tabulation of high_use and sex
 table1 <- xtabs(~sex+high_use, data=alc)
 ftable(table1)
 summary(table1)
-
-library(gridExtra)
-grid.arrange(g1_1, g2_1, g3_1, ncol=2)
-
 
 ```
 
@@ -190,14 +186,14 @@ The average number of wrong predictions in the data is `r loss`, which is not to
 
 # K-fold cross-validation
 library(boot)
-cv <- cv.glm(data = alc, cost = loss_func, glmfit = m, K = 10)
+cv <- cv.glm(data = alc, cost = loss_func, glmfit = m1, K = 10)
 
 # average number of wrong predictions in the cross validation
 wrong_pred <- cv$delta[1]
 
 ```
 
-The average number of wrong predictions in the cross validation is `r wrong_pred` which is slightly better than the model introduced in DataCamp (which had about 0.26 error).
+The average number of wrong predictions in the cross validation is `r wrong_pred` which is about the same as the model introduced in DataCamp (which had about 0.26 error).
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 

@@ -11,10 +11,7 @@ The preceding data wrangling exercise is available <a href="https://github.com/p
 
 <font size=-1 color=#7A7A7A>*I will assume that the reader has an introductory course level understanding of writing and reading R code as well as statistical methods, and that he/she has no previous knowledge of your data or the more advanced methods you are using.*</font>
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-date()
 
-```
 Here we go again...
 
 ## Description of data
@@ -58,7 +55,7 @@ graphic_overview
 
 ```
 
-In this data, there are more femailes than males. The majority of the participants are in their 20s (distribution skewed to left). The distributions look similar for both genders except for attitude, where more femailes have given lower ratings, and surface learning where females have a higher peak. Distributions are relatively normal (slight skews to right), but the points variable has a notably a fat right-hand tail. Some outliers are detected for age (older participants), attitude (low scores among males), deep learning (low scores for both) and points (low score among females).
+In this data, there are more females than males. The majority of the participants are in their 20s (distribution skewed to left). The distributions look similar for both genders except for attitude, where more femailes have given lower ratings, and surface learning where females have a higher peak. Distributions are relatively normal (slight skews to right), but the points variable has a notably a fat right-hand tail. Some outliers are detected for age (older participants), attitude (low scores among males), deep learning (low scores for both) and points (low score among females).
 
 Overall, the highest positive correlations can be found between attitude and points (r>0.4 for both genders), and negative correlations between deep and surface learning (r=-0.324) due to higher correlation among males (r=-0.622) than females (r=0.087). Interestingly, attitude and surface learning have higher negative correlations among females (r=-0.374) compared to males (r=-0.0148). Otherwise correlations are quite low.
 

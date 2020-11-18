@@ -63,4 +63,4 @@ glimpse(alc)
 # Save the joined and modified data set
 
 write.csv(alc, "C:/Users/minttu/R projects/IODS-project/data/students.csv", row.names = F)
-students <- read.csv("C:/Users/minttu/R projects/IODS-project/data/students.csv")
+

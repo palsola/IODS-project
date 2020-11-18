@@ -1,15 +1,8 @@
 # 3. Logistic regression analysis
 
 The purpose of this analysis is to study the relationships between high/low alcohol consumption and some of the other variables in the data. 
-
 The preceding data wrangling exercise is available <a href="https://github.com/palsola/IODS-project/blob/master/data/create_%20alc.R"> here<a/>.
 
-
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-date()
-
-```
 
 ## Hypotheses 
 

@@ -20,7 +20,7 @@ The Housing Values in Suburbs of Boston data has `r nrow(Boston)` observations o
 Most measures are numeric, except for Charles river dummy variable (chas) and accessibility to radial highways (rad, scale 1-24) that are integer values. A brief summary of the data is presented above. The ranges differ quite a bit.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
-pairs(Boston, col = classes)
+pairs(Boston)
 
 # taking a subset bc the figure is unreadable
 pairs(Boston [3:8])
@@ -142,7 +142,7 @@ No class was perfectly predicted, but it predicts higher crime rates better than
 
 ## K-means clustering
 
-Reload the Boston dataset and standardize the dataset. Calculate the distances between the observations. 
+For the K-means clustering, I will reload the Boston dataset and standardize the dataset. Below you can find also the calculated euclidean and manhattan distances between the observations. 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library (MASS)
@@ -157,7 +157,7 @@ summary(dist_man)
 
 ```
 
-Run k-means algorithm on the dataset. Visualize the clusters (for example with the pairs() or ggpairs() functions, where the clusters are separated with colors) and interpret the results. 
+Nest, I will run k-means algorithm on the datase and Visualize the clusters. 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # Run k-means on the dataset.
@@ -168,9 +168,14 @@ pairs(boston_scaled1, col = km$cluster)
 
 # cannot see a thing, zooming into last five variables
 pairs(boston_scaled1 [9:14], col = km$cluster)
+
+classes <- as.numeric(train$crime)
+
+plot(lda.fit, dimen = 2, col= classes, pch = classes)
+lda.arrows(lda.fit, myscale = 1)
 ````
 
-Investigate what is the optimal number of clusters and run the algorithm again. 
+Based on the figure, it looks like for many variables the clusters are not very clearly distinguishable (especially if I am supposed to detect four cluster centers), even though some systematicness might be detected. Hence, I will now investigate what is the optimal number of clusters and run the algorithm again. 
 
 ```{r}
 library(ggplot2)
@@ -193,3 +198,4 @@ pairs(boston_scaled1, col = km$cluster)
 pairs(boston_scaled1 [5:9], col = km$cluster)
 ````
 
+After performing the k-means with 2 clusters, the plots seem to have more systematicness and the clusters are detectable from the data for many pairs. 

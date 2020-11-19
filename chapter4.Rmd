@@ -17,15 +17,20 @@ summary(Boston)
 ```
 The Housing Values in Suburbs of Boston data has `r nrow(Boston)` observations of `r ncol(Boston)`. The data includes measures of different aspects of housing  e.g., house values, crime rates, pollution, accessibility to highways and business centers, taxes. schools, etc. (see full list of measures <a href="https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html">here</a>.)
 
-Most measures are numeric, except for Charles river dummy variable (chas) and accessibility to radial highways (rad, scale 1-24). A brief summary of the data is presented above. 
+Most measures are numeric, except for Charles river dummy variable (chas) and accessibility to radial highways (rad, scale 1-24) that are integer values. A brief summary of the data is presented above. The ranges differ quite a bit.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
-pairs(Boston)
+pairs(Boston, col = classes)
+
+# taking a subset bc the figure is unreadable
+pairs(Boston [3:8])
 
 
 ```
 
-The graphical overview presented above has a lot of information but is difficult to understand and interpret. As associations between the variables are hard to see in this figure, I will use a correlation plot to look at the associations in the data. 
+The graphical overview presented above has a lot of information but is difficult to understand and interpret. There seem to be some linear associations between some of the variables based on the shapes of the scatter plots. The integer variables naturally end up with two straight lines at both ends of the scale.
+
+As associations between the variables are hard to see in this figure, I will use a correlation plot to investigate the associations in the data a bit more. 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(corrplot)
@@ -187,3 +192,4 @@ pairs(boston_scaled1, col = km$cluster)
 # still cannot see a thing, zooming into five variables
 pairs(boston_scaled1 [5:9], col = km$cluster)
 ````
+
